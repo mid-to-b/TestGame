@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "arcanoid.h"
 #include "arcanoidDlg.h"
-#include "afxdialogex.h"
+#include "afxdialogex.h"'
+#include <cstdlib>
 #include "math.h"
 
 #ifdef _DEBUG
@@ -50,10 +51,18 @@ END_MESSAGE_MAP()
 
 CarcanoidDlg::CarcanoidDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CarcanoidDlg::IDD, pParent)
-	, HELP(0)
 {
 	crd.x = 0;
 	crd.y = 0;
+	timer = 0;
+	start = 0;
+	tchka.x = 0;
+	tchka.y = 0;
+	countEnemy = 10;
+	alf = -90;
+	score = "1";
+	firsts = 0;
+	speed = 2;
 	first = new Enemy;
 	for (int i = 0; i < countEnemy/2; i++)
 	{
@@ -72,7 +81,7 @@ CarcanoidDlg::CarcanoidDlg(CWnd* pParent /*=NULL*/)
 void CarcanoidDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, HELP);
+
 }
 
 BEGIN_MESSAGE_MAP(CarcanoidDlg, CDialogEx)
@@ -140,14 +149,22 @@ void CarcanoidDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CarcanoidDlg::OnPaint()
 {
-
+	
 		CPaintDC dc(this);
+		
 		CRect rect;
 		GetClientRect(&rect);
 		int x = rect.Width();
 		int y = rect.Height();
+		CBrush br;
+		CPen pn;
+		pn.CreatePen(0, 5, RGB(255, 255, 255));
+		br.CreateSolidBrush(RGB(255, 255, 255));
+		dc.SelectObject(br);
+		dc.SelectObject(pn);
+		dc.Rectangle(0, 0, x, y);
 		printEnemy();
-		
+		Score();
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
@@ -174,6 +191,7 @@ void CarcanoidDlg::Player(CPoint point)
 	GetClientRect(&rect);
 	DC.SelectObject(pn);
 	int y = rect.Height();
+	int x = rect.Width();
 	DC.Rectangle(a - (68 / 2), y - 43, a + (68 / 2), y - 50);
 	CDC* pDC = &DC;
 	CBitmap bmp;
@@ -185,12 +203,26 @@ void CarcanoidDlg::Player(CPoint point)
 	a = point.x;
 	crd.x = point.x - (68 / 2);
 	crd.y = y - 50;
+	if (!start)
+	{
+		
+		DC.Rectangle(0, y - 65 + 6, x, y - 65);
+		CDC* pDC = &DC;
+		CBitmap bmp;
+		bmp.LoadBitmap(IDB_BITMAP2);
+		CDC dc;
+		dc.CreateCompatibleDC(pDC);
+		dc.SelectObject(&bmp);
+		pDC->BitBlt(point.x - 6 , y - 65, 12, 12, &dc, 0, 0, SRCCOPY);
+	}
 }
 
 void CarcanoidDlg::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	static bool start = 0;
+	
 	if (!start){
+		tchka.x = crd.x + (68 / 2) - 6;
+		tchka.y = crd.y - 15;
 		start = 1;
 		ball();
 	}
@@ -200,7 +232,6 @@ void CarcanoidDlg::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CarcanoidDlg::ball()
 {
-	UpdateData(0);
 	CClientDC DC(this);
 	CRect rect;
 	CPen pn;
@@ -210,12 +241,7 @@ void CarcanoidDlg::ball()
 	int x = rect.Width()/2;
 	int y = rect.Height()/2;
 	SetTimer(1, 1, 0);
-	static double alf = 90;
-	static int timer = 0;
-	static CPoint tchka(x - (12 / 2),y);
-	static int cygl = 0; // kof ygla
-
-	DC.Rectangle(tchka.x + (timer - 3)*cos(3.14*alf / 180.0), tchka.y  + (timer - 3)*sin(3.14*alf / 180.0), tchka.x + 12 + (timer - 3)*cos(3.14*alf / 180.0), tchka.y +12+ (timer - 3)*sin(3.14*alf / 180.0));
+	DC.Rectangle(tchka.x + (timer - speed)*cos(3.14*alf / 180.0), tchka.y  + (timer - speed)*sin(3.14*alf / 180.0), tchka.x + 12 + (timer - speed)*cos(3.14*alf / 180.0), tchka.y +12+ (timer - speed)*sin(3.14*alf / 180.0));
 	
 	
 	switch (logicBall(tchka, timer, alf))
@@ -228,6 +254,7 @@ void CarcanoidDlg::ball()
 		}
 		else alf = ygl(double(abs((crd.x + 34) - (tchka.x))), double(7.0)) - 90;
 		timer = 0;
+		
 	}break;
 
 	case 2:{
@@ -236,14 +263,16 @@ void CarcanoidDlg::ball()
 		alf *= -1;
 		alf -= 180;
 		timer = 0;
+		
 	}break;
 
 	case 3:{
-		tchka.x = tchka.x + timer*cos(3.14*alf / 180.0);
+		tchka.x = (tchka.x + timer*cos(3.14*alf / 180.0))+1;
 		tchka.y = tchka.y + timer*sin(3.14*alf / 180.0);
 		alf *= -1;
 		alf += 180;
 		timer = 0;
+		
 	}break;
 		
 	case 4:{
@@ -251,19 +280,18 @@ void CarcanoidDlg::ball()
 		tchka.y = tchka.y + timer*sin(3.14*alf / 180.0);
 		alf *= -1;
 		timer = 0;
+		
 	}break;
 
 	case 5:{
 		tchka.x = tchka.x + timer*cos(3.14*alf / 180.0);
-		tchka.y = tchka.y + timer*sin(3.14*alf / 180.0);
-		alf = 90;
-		//alf -= 180;
+		tchka.y = (tchka.y + timer*sin(3.14*alf / 180.0))+1;
+		alf *=-1;
 		timer = 0;
 	}break;
 
 	default: break;
 	}
-	HELP = alf;
 	CDC* pDC = &DC;
 	CBitmap bmp;
 	bmp.LoadBitmap(IDB_BITMAP2);
@@ -271,9 +299,7 @@ void CarcanoidDlg::ball()
 	dc.CreateCompatibleDC(pDC);
 	dc.SelectObject(&bmp);
 	pDC->BitBlt(tchka.x + timer*cos(3.14*alf / 180.0), tchka.y + timer*sin(3.14*alf / 180.0), 12, 12, &dc, 0, 0, SRCCOPY);
-	timer++;
-	
-
+	timer+=speed;
 }
 
 double CarcanoidDlg::ygl(double a, double b)
@@ -314,10 +340,10 @@ int CarcanoidDlg::logicBall(CPoint tchka,int timer,double alf)
 	int x = rect.Width() / 2;
 	int y = rect.Height() / 2;
 	
-	if (((tchka.x + timer*cos(3.14*alf / 180.0)) <= (crd.x + 68)) &&
-		((tchka.x + 12 + timer*cos(3.14*alf / 180.0)) >= crd.x) &&
-		((tchka.y + 12 + timer*sin(3.14*alf / 180.0)) >= crd.y) &&
-		((tchka.y + timer*sin(3.14*alf / 180.0)) <= (crd.y + 7)))
+	if (((tchka.x + timer*cos(3.14*alf / 180.0)) < (crd.x + 68)) &&
+		((tchka.x + 12 + timer*cos(3.14*alf / 180.0)) > crd.x) &&
+		((tchka.y + 12 + timer*sin(3.14*alf / 180.0)) > crd.y) &&
+		((tchka.y + timer*sin(3.14*alf / 180.0)) < (crd.y + 7)))
 	{
 		return 1;
 	}
@@ -351,31 +377,160 @@ int CarcanoidDlg::logicBall(CPoint tchka,int timer,double alf)
 			((tchka.y + timer*sin(3.14*alf / 180.0)) <= (write->coord.y + shirinaEnemy))
 			){
 
-			if(
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) <= (write->coord.y + shirinaEnemy)) &&
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) >= write->coord.y) &&
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) > (write->coord.x + dlinaEnemy/2))
-				)return 3;
 			if (
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) <= (write->coord.y + shirinaEnemy)) &&
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) >= write->coord.y) &&
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) < (write->coord.x + dlinaEnemy/2))
-				)return 2;
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) <= (write->coord.y + shirinaEnemy + (6 * sqrt(2.0)) / 2)) &&
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) >= (write->coord.y - (6 * sqrt(2.0)) / 2)) &&
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) >= (write->coord.x + dlinaEnemy))
+				)
+			{
+				Kill(i);
+				return 3;
+			}
 			if (
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) <= (write->coord.x + dlinaEnemy)) &&
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) >= write->coord.x) &&
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) < (write->coord.y + shirinaEnemy)/2)
-				)return 4;
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) <= (write->coord.y + shirinaEnemy + (6 * sqrt(2.0)) / 2)) &&
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) >= (write->coord.y - (6 * sqrt(2.0)) / 2)) &&
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) <= (write->coord.x))
+				)
+			{
+				Kill(i);
+				return 2;
+			}
 			if (
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) <= (write->coord.x + dlinaEnemy)) &&
-				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) >= write->coord.x) &&
-				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) > (write->coord.y + shirinaEnemy/2))
-				)return 4;
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) <= (write->coord.x + dlinaEnemy + (6 * sqrt(2.0)) / 2)) &&
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) >= (write->coord.x - (6 * sqrt(2.0)) / 2)) &&
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) <= (write->coord.y))
+				)
+			{
+				Kill(i);
+				return 4;
+			}
+			if (
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) <= (write->coord.x + dlinaEnemy + (6 * sqrt(2.0)) / 2)) &&
+				((tchka.x + 6 + timer*cos(3.14*alf / 180.0)) >= (write->coord.x - (6 * sqrt(2.0)) / 2)) &&
+				((tchka.y + 6 + timer*sin(3.14*alf / 180.0)) >= (write->coord.y + shirinaEnemy))
+				)
+			{
+				Kill(i);
+				return 5;
+			}
 
 				
 		}
 		write = write->next;
 	}
+
+	/////////////////////// Шарик об нижнюю стенку
+
+	if ((tchka.y + 12 + timer*sin(3.14*alf / 180.0)) >= (y*2)) Lose();
 	
 	return 0;
+}
+
+void CarcanoidDlg::Kill(int num)
+{
+	CClientDC DC(this);
+	CBrush br;
+	CPen pn;
+	pn.CreatePen(0, 5, RGB(255, 255, 255));
+	br.CreateSolidBrush(RGB(255, 255, 255));
+	DC.SelectObject(br);
+	DC.SelectObject(pn);
+	Enemy* kill = new Enemy;
+	kill = first;
+	if (!num)
+	{
+		DC.Rectangle(kill->coord.x, kill->coord.y, kill->coord.x + dlinaEnemy, kill->coord.y + shirinaEnemy);
+		first = first->next;
+		
+	}
+	else{
+		for (int i = 0; i < num-1; i++) kill = kill->next;
+		DC.Rectangle(kill->next->coord.x, kill->next->coord.y, kill->next->coord.x + dlinaEnemy, kill->next->coord.y + shirinaEnemy);
+		kill->next = kill->next->next;
+	}
+	countEnemy--;
+	if (!countEnemy)Win();
+}
+
+void CarcanoidDlg::Win()
+{
+	KillTimer(1);
+	CClientDC DC(this);
+	CBrush br;
+	CPen pn;
+	pn.CreatePen(0, 5, RGB(255, 255, 255));
+	br.CreateSolidBrush(RGB(255, 255, 255));
+	DC.SelectObject(br);
+	DC.SelectObject(pn);
+	tchka.x = 480 / 2 - (12 / 2);
+	tchka.y = 325 / 2;
+	alf = -90;
+	crd.x = 0;
+	timer = 0;
+	crd.y = 0;
+	start = 0;
+	speed++;
+	countEnemy = 10;
+	first = new Enemy;
+	for (int i = 0; i < countEnemy / 2; i++)
+	{
+		for (int y = 50; y <= countEnemy / 5 * 50; y += 50)
+		{
+			Enemy * second = new Enemy;
+			second->coord.x = i*dlinaEnemy + i * 5 + 50;
+			second->coord.y = y;
+			second->next = first;
+			first = second;
+		}
+	}
+	CWnd::Invalidate(1);
+}
+
+void CarcanoidDlg::Lose()
+{
+	KillTimer(1);
+	MessageBox(L"You Lose");
+	firsts = 0;
+	score = "1";
+	CClientDC DC(this);
+	CBrush br;
+	CPen pn;
+	pn.CreatePen(0, 5, RGB(255, 255, 255));
+	br.CreateSolidBrush(RGB(255, 255, 255));
+	DC.SelectObject(br);
+	DC.SelectObject(pn);
+	tchka.x = 480 / 2 - (12 / 2);
+	tchka.y = 325 / 2;
+	alf = -90;
+	crd.x = 0;
+	timer = 0;
+	crd.y = 0;
+	speed = 2;
+	start = 0;
+	countEnemy = 10;
+	first = new Enemy;
+	for (int i = 0; i < countEnemy / 2; i++)
+	{
+		for (int y = 50; y <= countEnemy / 5 * 50; y += 50)
+		{
+			Enemy * second = new Enemy;
+			second->coord.x = i*dlinaEnemy + i * 5 + 50;
+			second->coord.y = y;
+			second->next = first;
+			first = second;
+		}
+	}
+	CWnd::Invalidate(1);
+}
+
+void CarcanoidDlg::Score()
+{
+	CClientDC DC(this);
+	char buf[6];
+	for (int i = 0; i < strlen(buf); i++)buf[i] = score[i];
+	if (!firsts)firsts = 1;
+	else _itoa_s(atoi(buf)+1, buf, 10);
+	score = buf;
+	DC.TextOutW(10, 300, L"LvL : ");
+	DC.TextOutW(50, 300, score);
 }

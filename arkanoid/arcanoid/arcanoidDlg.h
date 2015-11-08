@@ -42,11 +42,21 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	double CarcanoidDlg::ygl(double a, double b);
 	CPoint crd; // координаты платформы (н.л. угл)
-	double HELP;
-	const int countEnemy=10;  // число вргов
+	bool start;
+	int countEnemy;  // число вргов
 	const int dlinaEnemy=70;  // длина врагов
 	const int shirinaEnemy=15;// ширина врагов
 	int CarcanoidDlg::logicBall(CPoint tchka, int timer, double alf);
 	void CarcanoidDlg::printEnemy();
+	void CarcanoidDlg::Kill(int num);
+	void CarcanoidDlg::Win();
+	void CarcanoidDlg::Lose();
+	void CarcanoidDlg::Score();
+	bool firsts;
+	int speed;
+	CString score;
+	double alf;
+	int timer;
+	CPoint tchka;
 	Enemy* first;
 };
