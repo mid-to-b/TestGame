@@ -35,28 +35,12 @@ public:
 		CPoint coord;
 		Enemy* next;
 	};
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	void CarcanoidDlg::Player(CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	void CarcanoidDlg::ball();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	double CarcanoidDlg::ygl(double a, double b);
-	CPoint crd; // координаты платформы (н.л. угл)
-	bool start;
-	int countEnemy;  // число вргов
-	const int dlinaEnemy=70;  // длина врагов
-	const int shirinaEnemy=15;// ширина врагов
-	int CarcanoidDlg::logicBall(CPoint tchka, int timer, double alf);
-	void CarcanoidDlg::printEnemy();
-	void CarcanoidDlg::Kill(int num);
-	void CarcanoidDlg::Win();
-	void CarcanoidDlg::Lose();
-	void CarcanoidDlg::Score();
-	bool firsts;
-	int speed;
-	CString score;
-	double alf;
-	int timer;
-	CPoint tchka;
+	afx_msg void ButtonStartGame();
+	afx_msg void ButtonLoadMap();
+	const int dlinaEnemy = 70;  // длина врагов
+	const int shirinaEnemy = 15;// ширина врагов
+	int countEnemy;
 	Enemy* first;
+	CString hi;
+	
 };
