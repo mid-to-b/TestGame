@@ -56,6 +56,7 @@ void screen::nol(int num_strok, int num_stolb)
 	this->buf_screen[num_strok * 20 + (num_stolb + 1)] = '*';
 	this->buf_screen[num_strok * 20 + (num_stolb - 1)] = '*';
 }
+
 class game
 {
 	public:
@@ -87,6 +88,15 @@ void game::game_start()
 	for(int i = 0; i < 3; i++)
 		for(int j = 0; j < 3; j++)
 			sctr_O[i][j] = false;
+	mscreen.buf_screen[3 * 20 + 4] = '1';
+	mscreen.buf_screen[3 * 20 + 10] = '2';
+	mscreen.buf_screen[3 * 20 + 16] = '3';
+	mscreen.buf_screen[9 * 20 + 4] = '4';
+	mscreen.buf_screen[9 * 20 + 10] = '5';
+	mscreen.buf_screen[9 * 20 + 16] = '6';
+	mscreen.buf_screen[15 * 20 + 4] = '7';
+	mscreen.buf_screen[15 * 20 + 10] = '8';
+	mscreen.buf_screen[15 * 20 + 16] = '9';
 }
 
 bool game::game_over()
@@ -98,7 +108,7 @@ bool game::game_over()
 	   (sctr_X[0][1] && sctr_X[1][1] && sctr_X[2][1]) ||
 	   (sctr_X[0][2] && sctr_X[1][2] && sctr_X[2][2]) ||
 	   (sctr_X[0][0] && sctr_X[1][1] && sctr_X[2][2]) ||
-	   (sctr_X[0][2] && sctr_X[1][1] && sctr_X[0][2]))
+	   (sctr_X[0][2] && sctr_X[1][1] && sctr_X[2][0]))
 	   {
 		   printf("\nKrestiki pobedili.\n");
 		   return false;
@@ -111,9 +121,23 @@ bool game::game_over()
 	   (sctr_O[0][1] && sctr_O[1][1] && sctr_O[2][1]) ||
 	   (sctr_O[0][2] && sctr_O[1][2] && sctr_O[2][2]) ||
 	   (sctr_O[0][0] && sctr_O[1][1] && sctr_O[2][2]) ||
-	   (sctr_O[0][2] && sctr_O[1][1] && sctr_O[0][2]))
+	   (sctr_O[0][2] && sctr_O[1][1] && sctr_O[2][0]))
 	   {
 		   printf("\nNoliki pobedili.\n");
+		   return false;
+	   }
+	if((mscreen.buf_screen[3 * 20 + 4] != '1') &&
+	   (mscreen.buf_screen[3 * 20 + 10] != '2') &&
+	   (mscreen.buf_screen[3 * 20 + 16] != '3') &&
+	   (mscreen.buf_screen[9 * 20 + 4] != '4') &&
+	   (mscreen.buf_screen[9 * 20 + 10] != '5') &&
+	   (mscreen.buf_screen[9 * 20 + 16] != '6') &&
+	   (mscreen.buf_screen[15 * 20 + 4] != '7') &&
+	   (mscreen.buf_screen[15 * 20 + 10] != '8') &&
+	   (mscreen.buf_screen[15 * 20 + 16] != '9')
+	   )
+	   {
+		   printf("\nNich'ya.\n");
 		   return false;
 	   }
 	return true;
@@ -216,54 +240,63 @@ bool game::player_O()
 	{
 		mscreen.nol(3, 3);
 		sctr_O[0][0] = true;
+		mscreen.buf_screen[3 * 20 + 4] = ' ';
 		return true;
 	}
 	if(GetAsyncKeyState('2') && (!sctr_O[0][1]) && (!sctr_X[0][1]))
 	{	
 		mscreen.nol(3, 9);
 		sctr_O[0][1] = true;
+		mscreen.buf_screen[3 * 20 + 10] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('3') && (!sctr_O[0][2]) && (!sctr_X[0][2]))
 	{	
 		mscreen.nol(3, 15);
 		sctr_O[0][2] = true;
+		mscreen.buf_screen[3 * 20 + 16] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('4') && (!sctr_O[1][0]) && (!sctr_X[1][0]))
 	{	
 		mscreen.nol(9, 3);
 		sctr_O[1][0] = true;
+		mscreen.buf_screen[9 * 20 + 4] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('5') && (!sctr_O[1][1]) && (!sctr_X[1][1]))
 	{	
 		mscreen.nol(9, 9);
 		sctr_O[1][1] = true;
+		mscreen.buf_screen[9 * 20 + 10] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('6') && (!sctr_O[1][2]) && (!sctr_X[1][2]))
 	{	
 		mscreen.nol(9, 15);
 		sctr_O[1][2] = true;
+		mscreen.buf_screen[9 * 20 + 16] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('7') && (!sctr_O[2][0]) && (!sctr_X[2][0]))
 	{	
 		mscreen.nol(15, 3);
 		sctr_O[2][0] = true;
+		mscreen.buf_screen[15 * 20 + 4] = ' ';
 		return true;
 	}
 	if(GetAsyncKeyState('8') && (!sctr_O[2][1]) && (!sctr_X[2][1]))
 	{	
 		mscreen.nol(15, 9);
 		sctr_O[2][1] = true;
+		mscreen.buf_screen[15 * 20 + 10] = ' ';
 		return true;
 	}	
 	if(GetAsyncKeyState('9') && (!sctr_O[2][2]) && (!sctr_X[2][2]))
 	{	
 		mscreen.nol(15, 15);
 		sctr_O[2][2] = true;
+		mscreen.buf_screen[15 * 20 + 16] = ' ';
 		return true;
 	}
 	return false;
