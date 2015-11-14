@@ -104,6 +104,7 @@
     <ClInclude Include="arcanoid.h" />
     <ClInclude Include="arcanoidDlg.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="arcanoid.cpp" />
     <ClCompile Include="arcanoidDlg.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

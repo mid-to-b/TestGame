@@ -49,6 +49,7 @@ public:
 	int timer;
 	CPoint tchka;
 	Enemy* first;
+	void Game::Determination();
 //	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnMove(int x, int y);
 };

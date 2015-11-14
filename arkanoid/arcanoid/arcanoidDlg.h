@@ -41,6 +41,7 @@ public:
 	const int shirinaEnemy = 15;// ширина врагов
 	int countEnemy;
 	Enemy* first;
-	CString hi;
+	Enemy * tmp;
 	
+	afx_msg void ButtonCreatLvl();
 };

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "arcanoid.h"
 #include "Game.h"
+#include "Level.h"
 #include "arcanoidDlg.h"
 #include "afxdialogex.h"'
 #include <cstdlib>
@@ -53,8 +54,10 @@ END_MESSAGE_MAP()
 CarcanoidDlg::CarcanoidDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CarcanoidDlg::IDD, pParent)
 {
-	countEnemy = 10;
+	countEnemy = 0;
 	first = new Enemy;
+	tmp = new Enemy;
+	tmp = first;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -71,6 +74,7 @@ BEGIN_MESSAGE_MAP(CarcanoidDlg, CDialogEx)
 
 	ON_BN_CLICKED(IDC_BUTTON1, &CarcanoidDlg::ButtonStartGame)
 	ON_BN_CLICKED(IDC_BUTTON2, &CarcanoidDlg::ButtonLoadMap)
+	ON_BN_CLICKED(IDC_BUTTON3, &CarcanoidDlg::ButtonCreatLvl)
 END_MESSAGE_MAP()
 
 
@@ -152,16 +156,76 @@ void CarcanoidDlg::ButtonStartGame()
 {
 	
 	Game start;
-	
 	start.DoModal();
 }
 
 
 void CarcanoidDlg::ButtonLoadMap()
 {
-	Game En;
-	
-	En.countEnemy = 20;
-	countEnemy = 20;
+	Enemy * tmp_1 = new Enemy;
+	tmp_1 = first;
+	CFileDialog fileDialog(TRUE, NULL, L".txt", NULL, L"Text file (*.txt)|*.txt|");
+	int result = fileDialog.DoModal();
+	if (result == IDOK)
+	{
+		CStdioFile File(fileDialog.GetPathName(), CFile::modeRead);
+		bool count = 0;
+		bool swap = 0;
+		CString buffer;
+		char buff[5] = "";
+		char * buf = new char[File.GetLength()];
+		File.Read(buf, File.GetLength());
+		for (int i = 0; i < File.GetLength(); i++)
+		{
+			if (buf[i] == 'þ'){
+				continue;
+			}
+			if (int(buf[i]) == 0)
+			{	
+				if (!count)
+				{
+					countEnemy = _wtoi(buffer);
+					for (int i = 1; i < countEnemy; i++)
+					{
+						Enemy * write = new Enemy;
+						tmp_1->next = write;
+						tmp_1 = write;
+					}
+					tmp_1 = first;
+					buffer = "";
+					count = 1;
+					continue;
+				}
+				else
+				{
+					if (!swap)
+					{
+						tmp_1->coord.x = _wtoi(buffer);
+						buffer = "";
+						swap = 1;
+						continue;
+					}
+					else {
+						tmp_1->coord.y = _wtoi(buffer);
+						tmp_1 = tmp_1->next;
+						buffer = "";
+						swap = 0;
+						continue;
+					}
+				}
+			}
+			buffer += buf[i];
+		}
+		count = 0;
+		swap = 0;
+	}
+	tmp_1 = first;
 	ButtonStartGame();
+}
+
+
+void CarcanoidDlg::ButtonCreatLvl()
+{
+	Level create;
+	create.DoModal();
 }

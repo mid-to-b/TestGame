@@ -56,25 +56,9 @@ void Game::OnPaint()
 {
 	CPaintDC dc(this); 
 	CRect rect;
-	CarcanoidDlg Wind;
 	GetClientRect(&rect);
 	int x = rect.Width();
 	int y = rect.Height();
-	CString *hi = &Wind.hi;
-	//MessageBox(*hi);
-	countEnemy = Wind.countEnemy;
-	for (int i = 0; i < countEnemy / 2; i++)
-	{
-		for (int y = 50; y <= countEnemy / 5 * 50; y += 50)
-		{
-			Enemy * second = new Enemy;
-			second->coord.x = i*dlinaEnemy + i * 5 + 50;
-			second->coord.y = y;
-			second->next = first;
-			first = second;
-		}
-	}
-
 	CBrush br;
 	CPen pn;
 	pn.CreatePen(0, 5, RGB(255, 255, 255));
@@ -82,6 +66,8 @@ void Game::OnPaint()
 	dc.SelectObject(br);
 	dc.SelectObject(pn);
 	dc.Rectangle(0, 0, x, y);
+
+	Determination();
 	printEnemy();
 	Score();
 }
@@ -128,7 +114,6 @@ void Game::Player(CPoint point)
 	}
 }
 
-
 void Game::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if (!start){
@@ -158,10 +143,10 @@ void Game::ball()
 	case 1:{
 		tchka.x = tchka.x + timer*cos(3.14*alf / 180.0);
 		tchka.y = tchka.y + timer*sin(3.14*alf / 180.0);
-		if (((crd.x + 34) - (tchka.x)) >= 0){
-			alf = -1 * ygl(double(abs((crd.x + 34) - (tchka.x))), double(7.0)) - 90;
+		if (((crd.x + 34) - (tchka.x+6)) >= 0){
+			alf = -1 * ygl(double(abs((crd.x + 34) - (tchka.x+6))), double(7.0)) - 90;
 		}
-		else alf = ygl(double(abs((crd.x + 34) - (tchka.x))), double(7.0)) - 90;
+		else alf = ygl(double(abs((crd.x + 34) - (tchka.x+6))), double(7.0)) - 90;
 		timer = 0;
 
 	}break;
@@ -217,12 +202,10 @@ double Game::ygl(double a, double b)
 	return ygl;
 }
 
-
 void Game::OnTimer(UINT_PTR nIDEvent)
 {
 	ball();
 }
-
 
 void Game::printEnemy()
 {
@@ -237,7 +220,7 @@ void Game::printEnemy()
 		dc.Rectangle(print->coord.x, print->coord.y, print->coord.x + dlinaEnemy, print->coord.y + shirinaEnemy);
 		print = print->next;
 	}
-	delete print;
+	//delete print;
 }
 
 int Game::logicBall(CPoint tchka, int timer, double alf)
@@ -368,6 +351,7 @@ void Game::Win()
 	CClientDC DC(this);
 	CBrush br;
 	CPen pn;
+	first = new Enemy;
 	pn.CreatePen(0, 5, RGB(255, 255, 255));
 	br.CreateSolidBrush(RGB(255, 255, 255));
 	DC.SelectObject(br);
@@ -380,19 +364,6 @@ void Game::Win()
 	crd.y = 0;
 	start = 0;
 	speed++;
-	countEnemy = 10;
-	first = new Enemy;
-	for (int i = 0; i < countEnemy / 2; i++)
-	{
-		for (int y = 50; y <= countEnemy / 5 * 50; y += 50)
-		{
-			Enemy * second = new Enemy;
-			second->coord.x = i*dlinaEnemy + i * 5 + 50;
-			second->coord.y = y;
-			second->next = first;
-			first = second;
-		}
-	}
 	CWnd::Invalidate(1);
 }
 
@@ -417,19 +388,6 @@ void Game::Lose()
 	crd.y = 0;
 	speed = 2;
 	start = 0;
-	countEnemy = 10;
-	first = new Enemy;
-	for (int i = 0; i < countEnemy / 2; i++)
-	{
-		for (int y = 50; y <= countEnemy / 5 * 50; y += 50)
-		{
-			Enemy * second = new Enemy;
-			second->coord.x = i*dlinaEnemy + i * 5 + 50;
-			second->coord.y = y;
-			second->next = first;
-			first = second;
-		}
-	}
 	CWnd::Invalidate(1);
 }
 
@@ -445,10 +403,37 @@ void Game::Score()
 	DC.TextOutW(50, 300, score);
 }
 
-
 void Game::OnMove(int x, int y)
 {
 	static int buf = 0;
 	//if(buf > 2)MessageBox(L"сдвиг плохо работает");
 	buf++;
+}
+
+void Game::Determination()
+{
+	CarcanoidDlg *pMain = (CarcanoidDlg*)GetParent();
+	Enemy * tmp = new Enemy;
+	tmp = first;
+	countEnemy = pMain->countEnemy;
+	static int a = 0;
+	for (int i = 0; i < countEnemy; i++)
+	{
+		if (!a)
+		{
+			tmp->coord.x = pMain->tmp->coord.x;
+			tmp->coord.y = pMain->tmp->coord.y;
+			a = 1;
+		}
+		else{
+			Enemy * second = new Enemy;
+			second->coord.x = pMain->tmp->coord.x;
+			second->coord.y = pMain->tmp->coord.y;
+			tmp->next = second;
+			tmp = tmp->next;
+		}
+		pMain->tmp = pMain->tmp->next;
+	}
+	a = 0;
+	pMain->tmp = pMain->first;
 }
