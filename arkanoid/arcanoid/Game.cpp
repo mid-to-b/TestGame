@@ -135,8 +135,8 @@ void Game::ball()
 	int x = rect.Width() / 2;
 	int y = rect.Height() / 2;
 	SetTimer(1, 1, 0);
-	DC.Rectangle(tchka.x + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + (timer - speed)*sin(3.14*alf / 180.0), tchka.x + 12 + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + 12 + (timer - speed)*sin(3.14*alf / 180.0));
-
+	//DC.Rectangle(tchka.x + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + (timer - speed)*sin(3.14*alf / 180.0), tchka.x + 12 + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + 12 + (timer - speed)*sin(3.14*alf / 180.0));
+	DC.Ellipse(tchka.x + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + (timer - speed)*sin(3.14*alf / 180.0), tchka.x + 12 + (timer - speed)*cos(3.14*alf / 180.0), tchka.y + 12 + (timer - speed)*sin(3.14*alf / 180.0));
 
 	switch (logicBall(tchka, timer, alf))
 	{
@@ -192,7 +192,7 @@ void Game::ball()
 	CDC dc;
 	dc.CreateCompatibleDC(pDC);
 	dc.SelectObject(&bmp);
-	pDC->BitBlt(tchka.x + timer*cos(3.14*alf / 180.0), tchka.y + timer*sin(3.14*alf / 180.0), 12, 12, &dc, 0, 0, SRCCOPY);
+	pDC->BitBlt(tchka.x + timer*cos(3.14*alf / 180.0), tchka.y + timer*sin(3.14*alf / 180.0), 15, 15, &dc, 0, 0, SRCCOPY);
 	timer += speed;
 }
 

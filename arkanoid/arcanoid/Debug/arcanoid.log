@@ -1,10 +1,10 @@
-﻿Build started 14.11.2015 23:07:45.
+﻿Build started 15.11.2015 10:54:19.
      1>Project "C:\Users\Никита\Documents\GitHub\TestGame\arkanoid\arcanoid\arcanoid.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\arcanoid.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp
          Game.cpp
      1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(92): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(138): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(139): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
      1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(144): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
      1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(145): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
      1>c:\users\никита\documents\github\testgame\arkanoid\arcanoid\game.cpp(155): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
@@ -30,4 +30,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.62
+Time Elapsed 00:00:03.48

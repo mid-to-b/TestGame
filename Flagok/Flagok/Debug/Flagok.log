@@ -1,0 +1,18 @@
+﻿Build started 29.11.2015 23:27:23.
+     1>Project "c:\Users\Никита\documents\visual studio 2013\Projects\Flagok\Flagok\Flagok.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Flagok.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt FlagokDlg.cpp
+         FlagokDlg.cpp
+     1>c:\users\никита\documents\visual studio 2013\projects\flagok\flagok\flagokdlg.cpp(157): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+     1>c:\users\никита\documents\visual studio 2013\projects\flagok\flagok\flagokdlg.cpp(160): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\никита\documents\visual studio 2013\Projects\Flagok\Debug\Flagok.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"c:\users\никита\documents\visual studio 2013\Projects\Flagok\Debug\Flagok.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\никита\documents\visual studio 2013\Projects\Flagok\Debug\Flagok.lib" /MACHINE:X86 Debug\Flagok.res
+         Debug\Flagok.obj
+         Debug\FlagokDlg.obj
+         Debug\stdafx.obj
+         Flagok.vcxproj -> c:\users\никита\documents\visual studio 2013\Projects\Flagok\Debug\Flagok.exe
+     1>Done Building Project "c:\Users\Никита\documents\visual studio 2013\Projects\Flagok\Flagok\Flagok.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.65
